@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padel Tournament App</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .dark-mode { background-color: #333; color: white; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <h1>Padel Tournament App</h1>
+    <button id="toggleDarkMode">Toggle Dark Mode</button>
+    
+    <div id="matchValidation">
+        <!-- Match validation inputs and logic will go here -->
+    </div>
+    
+    <div id="tournamentData">
+        <button id="exportTournament">Export Tournament as JSON</button>
+        <button id="importTournament">Import Tournament from JSON</button>
+        <input type="file" id="tournamentFile" class="hidden" />
+    </div>
+
+    <script>
+        // Dark mode toggle functionality
+        const toggleDarkMode = document.getElementById('toggleDarkMode');
+        toggleDarkMode.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+
+        // Functionality for match validation
+        function validateMatch(ga, gb) {
+            if (ga === gb) {
+                // Logic for handling ties properly
+                return 'Completed';
+            }
+            return 'In Progress'; // Add further validation logic as needed
+        }
+
+        // Export tournament functionality
+        document.getElementById('exportTournament').addEventListener('click', () => {
+            const tournamentData = {}; // Fetch your tournament data
+            const json = JSON.stringify(tournamentData);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'tournament.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        // Import tournament functionality
+        document.getElementById('importTournament').addEventListener('click', () => {
+            document.getElementById('tournamentFile').click();
+        });
+
+        document.getElementById('tournamentFile').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                const tournamentData = JSON.parse(reader.result);
+                // Handle imported data
+            };
+            reader.readAsText(file);
+        });
+    </script>
+</body>
+</html>
